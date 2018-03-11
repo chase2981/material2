@@ -1,3 +1,5 @@
+@import '../a11y/a11y';
+
 // We want overlays to always appear over user content, so set a baseline
 // very high z-index for the overlay container, which is where we create the new
 // stacking context for all overlays.
@@ -29,6 +31,12 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
   .cdk-overlay-container {
     position: fixed;
     z-index: $cdk-z-index-overlay-container;
+
+    &:empty {
+      // Hide the element when it doesn't have any child nodes. This doesn't
+      // include overlays that have been detached, rather than disposed.
+      display: none;
+    }
   }
 
   // We use an extra wrapper element in order to use make the overlay itself a flex item.
@@ -65,6 +73,12 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
 
     &.cdk-overlay-backdrop-showing {
       opacity: 1;
+
+      // In high contrast mode the rgba background will become solid
+      // so we need to fall back to making it opaque using `opacity`.
+      @include cdk-high-contrast {
+        opacity: 0.6;
+      }
     }
   }
 
